@@ -34,7 +34,6 @@ val appModule = module {
     single { LoginUseCase(get()) }
     viewModel { LoginViewModel(loginUseCase = get(),userRepository=get<UserRepository>())}
     single<UserDao> { UserDao(get()) }
-
 }
 
 
