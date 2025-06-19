@@ -33,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -42,7 +43,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.aifooddelivery.app.presentation.componets.CommonTextField
+import org.aifooddelivery.app.presentation.componets.CommonTextFieldBottom
 import org.aifooddelivery.app.presentation.componets.ExpiryDateField
+import org.aifooddelivery.app.presentation.componets.ExpiryDateFieldBottom
 import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -103,18 +106,62 @@ fun CardSummaryBottomSheet(
             Spacer(Modifier.height(16.dp))
 
 
-            Row(Modifier.fillMaxWidth()) {
-                ExpiryDateField(
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.Top
+            ) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp)
+                ) {
+                    Text("Expiry Date")
+                    Spacer(modifier = Modifier.height(5.dp))
+                    ExpiryDateFieldBottom(
+                        hint = "",
+                        value = mutableExpiry,
+                        onValueChange = { mutableExpiry = it },
+                        isError = false,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 8.dp)
+                ) {
+                    Text("3-Digit CVV")
+                    Spacer(modifier = Modifier.height(5.dp))
+                    CommonTextFieldBottom(
+                        value = mutableCvv,
+                        onValueChange = { mutableCvv = it },
+                        hint = "",
+                        placeholder = "123",
+                        isError = false,
+                        errorText = "",
+                        keyboardType = KeyboardType.Number,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+
+
+            /*Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ExpiryDateFieldBottom(
                     hint = "Expiry Date",
                     value = mutableExpiry,
                     onValueChange = { mutableExpiry = it },
                     isError = false,
                     placeholder = "MM / YY",
                     errorText = "Invalid or expired date",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp) // Use padding inside instead of external Spacer
                 )
-
-                Spacer(Modifier.width(16.dp))
 
                 CommonTextField(
                     value = mutableCvv,
@@ -124,9 +171,11 @@ fun CardSummaryBottomSheet(
                     isError = false,
                     errorText = "Enter 3-Digit CVV",
                     keyboardType = KeyboardType.Number,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 8.dp)
                 )
-            }
+            }*/
 
             Spacer(Modifier.height(24.dp))
 

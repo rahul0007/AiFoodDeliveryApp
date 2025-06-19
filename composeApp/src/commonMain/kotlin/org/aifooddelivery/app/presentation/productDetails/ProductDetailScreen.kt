@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -52,6 +53,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import org.aifooddelivery.app.presentation.home.FoodCard
+import org.aifooddelivery.app.presentation.order.gridItems
 import org.aifooddelivery.app.theme.blackColor
 import org.aifooddelivery.app.theme.contanerColor
 import org.aifooddelivery.app.theme.lightBg
@@ -60,10 +63,8 @@ import org.aifooddelivery.app.theme.onPrimaryLight
 import org.aifooddelivery.app.theme.primaryLight
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
-
-class ProductDetailScreen(rootNavController: NavHostController) : Screen {
-    @Composable
-    override fun Content() {
+@Composable
+fun ProductDetailScreen(rootNavController: NavHostController){
         val viewModel = koinInject<ProductDetailViewModel>()
         val state = viewModel.uiState.collectAsState()
         ProductDetailScreenContent(
@@ -72,7 +73,7 @@ class ProductDetailScreen(rootNavController: NavHostController) : Screen {
             onIncrease = viewModel::increaseQuantity,
             onDecrease = viewModel::decreaseQuantity
         )
-    }
+
 }
 
 @Composable
@@ -91,6 +92,11 @@ fun ProductDetailScreenContent(
             item { ContentHeader() }
             item { SectionTitle("Recommended For You", "See All") }
             item { Spacer(Modifier.height(15.dp)) }
+            gridItemsProduct(2, getRecommendedItems()) { item ->
+                FoodCard(item = item) {
+//                    rootNavController.navigate("product_detail_screen")
+                }
+            }
         }
 
         BottomSection(
@@ -245,6 +251,7 @@ fun BottomSection(
 ) {
     Row(
         modifier = modifier
+            .background(color = Color.White)
             .fillMaxWidth()
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -328,4 +335,26 @@ fun InfoItem(icon: Painter, text: String) {
         Text(text, color = lightBlack, fontSize = 16.sp)
     }
 }
-
+fun <T> LazyListScope.gridItemsProduct(
+    columns: Int, items: List<T>, itemContent: @Composable (T) -> Unit
+) {
+    val rows = if (items.size % columns == 0) items.size / columns else items.size / columns + 1
+    items(rows) { rowIndex ->
+        Row(
+            Modifier.fillMaxWidth().padding(horizontal = 15.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            for (columnIndex in 0 until columns) {
+                val itemIndex = rowIndex * columns + columnIndex
+                if (itemIndex < items.size) {
+                    Box(Modifier.weight(1f)) {
+                        itemContent(items[itemIndex])
+                    }
+                } else {
+                    Spacer(Modifier.weight(1f))
+                }
+            }
+        }
+        Spacer(Modifier.height(12.dp))
+    }
+}

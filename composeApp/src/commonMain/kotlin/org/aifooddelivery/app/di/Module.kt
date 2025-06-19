@@ -15,6 +15,8 @@ import org.aifooddelivery.app.presentation.login.viewModel.OtpVerificationViewMo
 import org.aifooddelivery.app.presentation.login.viewModel.RegisterViewModel
 import org.aifooddelivery.app.presentation.login.viewModel.ResetPasswordViewModel
 import org.aifooddelivery.app.presentation.navigation.SettingViewModel
+import org.aifooddelivery.app.presentation.notification.NotificationViewModel
+import org.aifooddelivery.app.presentation.productDetails.ProductDetailViewModel
 import org.aifooddelivery.app.utils.AppPreferences
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -28,11 +30,13 @@ val appModule = module {
     viewModel { ResetPasswordViewModel() }
     viewModel { HomeViewModel() }
     viewModel { ChatDetailViewModel() }
+    viewModel { NotificationViewModel() }
+    viewModel { ProductDetailViewModel() }
     viewModel { ChatListViewModel() }
     single<CurrencyApiService> { CurrencyApiServiceImpl() }
     single<UserRepository> { UserRepositoryImpl(get()) }
     single { LoginUseCase(get()) }
-    viewModel { LoginViewModel(loginUseCase = get(),userRepository=get<UserRepository>())}
+    viewModel { LoginViewModel(loginUseCase = get<LoginUseCase>(),userRepository=get<UserRepository>())}
     single<UserDao> { UserDao(get()) }
 }
 
