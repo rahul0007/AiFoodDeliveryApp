@@ -20,7 +20,6 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
-
     single { AppPreferences(get()) }
     viewModel { SettingViewModel(get()) }
     viewModel { ForgetPasswordViewModel() }
