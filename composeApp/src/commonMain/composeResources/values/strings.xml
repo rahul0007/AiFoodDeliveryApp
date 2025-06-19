@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+   <string name="onboarding_one_title">We serve\nincomparable\ndelicacies</string>
+    <string name="onboarding_one_subtitle">All the best restaurants with their top menu waiting for you, they can't wait for your order!!</string>
+    <string name="next">Next</string>
+    <string name="email_is_required">Email is required</string>
+    <string name="password_is_required">Password is required</string>
+    <string name="password_to_short">Password Must be at least 8 character</string>
+    <string name="both_password">Both password must match</string>
+    <string name="password">Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="invalid_email">Invalid email</string>
+    <string name="enter_email">Enter email</string>
+    <string name="email_address">Email Address</string>
+    <string name="btn_continue">Continue</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="enter_your_email_address_info">Enter your email address and we’ll send you confirmation code to reset your password</string>
+    <string name="select_which_contact_details">Select which contact details should we use to reset your password</string>
+    <string name="send_via_whatsApp">Send via WhatsApp</string>
+    <string name="send_via_email">Send via Email</string>
+    <string name="btn_sign_in">Sign In</string>
+    <string name="btn_register">Register</string>
+    <string name="or_sign_in_with">Or sign in with</string>
+    <string name="dont_have_an_account">Don’t have an account?</string>
+    <string name="sign_in_your_account">Please sign in to your account</string>
+    <string name="login_to_your_account">Login to your
+account.</string>
+    <string name="btn_next">Next</string>
+    <string name="btn_Skip">Skip</string>
+    <string name="enter_user_name">Enter user name</string>
+    <string name="user_name">User Name</string>
+    <string name="user_name_is_required">user name is required</string>
+    <string name="user_name_too_short">User name too short</string>
+    <string name="create_an_account_to_start_looking">Create an account to start looking for the food you like</string>
+    <string name="create_your_account">Create your new
+account</string>
+
+    <string name="verify_account">Verify Account</string>
+    <string name="home">Home</string>
+    <string name="chat">Chat</string>
+    <string name="cart">Cart</string>
+    <string name="profile">Profile</string>
+    <string name="password_changed">Password Changed</string>
+    <string name="password_changed_success">Password changed successfully, you can login again with a new password</string>
+</resources>
