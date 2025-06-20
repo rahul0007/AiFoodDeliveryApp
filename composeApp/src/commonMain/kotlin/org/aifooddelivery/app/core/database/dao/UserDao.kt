@@ -1,4 +1,4 @@
-package org.aifooddelivery.app.database
+package org.aifooddelivery.app.core.database.dao
 
 import app.cash.sqldelight.db.SqlDriver
 import com.aifood.MyDataBase

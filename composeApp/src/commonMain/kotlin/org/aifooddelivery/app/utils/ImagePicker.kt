@@ -1,6 +1,11 @@
 package org.aifooddelivery.app.utils
 
 interface ImagePicker {
-    fun pickImageFromGallery()
-    fun captureImageWithCamera()
+    suspend fun pickImageFromGallery(): ImageResult?
+    suspend fun captureImageWithCamera(): ImageResult?
 }
+
+data class ImageResult(
+    val name: String?,
+    val bytes: ByteArray
+)

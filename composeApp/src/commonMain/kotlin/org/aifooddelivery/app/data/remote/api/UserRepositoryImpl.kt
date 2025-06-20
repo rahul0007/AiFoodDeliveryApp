@@ -20,35 +20,15 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.aifooddelivery.app.data.model.LoginRequest
 import org.aifooddelivery.app.data.model.LoginResponse
-import org.aifooddelivery.app.database.UserDao
+import org.aifooddelivery.app.core.database.dao.UserDao
 import org.aifooddelivery.app.domain.repository.UserRepository
+import org.aifooddelivery.app.core.network.NetworkClient
 
 class UserRepositoryImpl(private val dao: UserDao) : UserRepository {
     companion object {
-        const val ENDPOINT = "https://dummyjson.com/user/login"
+        private const val ENDPOINT = "https://dummyjson.com/user/login"
     }
-
-    private val httpClient = HttpClient {
-        install(ContentNegotiation) {
-            json(Json {
-                prettyPrint = true
-                isLenient = true
-                ignoreUnknownKeys = true
-            })
-        }
-        install(HttpTimeout) {
-            requestTimeoutMillis = 15000
-        }
-        install(Logging) {
-            logger = object : Logger {
-                override fun log(message: String) {
-                    println("KTOR LOG => $message")
-                }
-            }
-            level = LogLevel.ALL
-        }
-    }
-
+    private val httpClient = NetworkClient.httpClient
     override suspend fun loginUser(
         username: String,
         password: String
@@ -72,12 +52,12 @@ class UserRepositoryImpl(private val dao: UserDao) : UserRepository {
             } else {
                 val errorBody = response.bodyAsText()
                 val message = try {
-                    val json = kotlinx.serialization.json.Json.parseToJsonElement(errorBody)
+                    val json = Json.parseToJsonElement(errorBody)
                     json.jsonObject["message"]?.jsonPrimitive?.contentOrNull
                 } catch (e: Exception) {
                     null
                 }
-                RequestState.Error("Login failed with status: ${message ?: "Login failed"}")
+                RequestState.Error("Login failed: ${message ?: "Unknown error"}")
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -99,13 +79,9 @@ class UserRepositoryImpl(private val dao: UserDao) : UserRepository {
     }
 
     override suspend fun loginWithValidation(email: String, password: String): UserEntity? {
-        return  dao.getUserByEmail(email)
-
+        return dao.getUserByEmail(email)
     }
-
-
 }
-
 
 /*{
     "username": "emilys",

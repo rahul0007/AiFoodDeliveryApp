@@ -1,6 +1,4 @@
-package org.aifooddelivery
-
-import com.squareup.sqldelight.db.SqlDriver
+package org.aifooddelivery.app.core.database
 
 actual class DatabaseDriverFactory {
     actual fun createDriver(): SqlDriver {

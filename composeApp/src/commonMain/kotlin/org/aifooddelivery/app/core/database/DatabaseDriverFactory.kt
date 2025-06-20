@@ -1,4 +1,4 @@
-package org.aifooddelivery
+package org.aifooddelivery.app.core.database
 
 import app.cash.sqldelight.db.SqlDriver
 

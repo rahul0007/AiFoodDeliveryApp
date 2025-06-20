@@ -1,9 +1,7 @@
 package org.aifooddelivery.app.presentation.profile
-
 import aifooddeliveryapp.composeapp.generated.resources.Res
 import aifooddeliveryapp.composeapp.generated.resources.food_one
 import aifooddeliveryapp.composeapp.generated.resources.ic_camera
-import aifooddeliveryapp.composeapp.generated.resources.ic_design_star_filled
 import aifooddeliveryapp.composeapp.generated.resources.img_user
 import aifooddeliveryapp.composeapp.generated.resources.profile_side_arrow
 import aifooddeliveryapp.composeapp.generated.resources.sign_out_ic
@@ -32,13 +30,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,39 +46,38 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import org.aifooddelivery.app.getPlatformActivity
 import org.aifooddelivery.app.theme.blackColor
 import org.aifooddelivery.app.theme.contanerColor
 import org.aifooddelivery.app.theme.grayColor
 import org.aifooddelivery.app.theme.redColor
 import org.aifooddelivery.app.presentation.componets.HomeToolbar
 import org.aifooddelivery.app.utils.DataStoreManager
-import org.aifooddelivery.app.utils.ImagePicker
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
-import org.koin.core.parameter.parametersOf
 import org.koin.mp.KoinPlatform.getKoin
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import kotlinx.coroutines.launch
+import org.aifooddelivery.app.decodeToImageBitmap
 import org.aifooddelivery.app.presentation.login.LoginScreen
 import org.aifooddelivery.app.presentation.componets.AppNavigator
 import org.aifooddelivery.app.presentation.componets.AppNavigator.resetTo
-import org.aifooddelivery.app.presentation.home.navigation.MainScreen
+import org.aifooddelivery.app.rememberImagePicker
+import org.aifooddelivery.app.utils.ImagePickerBottomSheet
 
 @Composable
 fun ProfileScreen(rootNavController: NavController) {
-    /* val activityWrapper = getPlatformActivity()
-     val imagePicker = remember(activityWrapper) {
-         activityWrapper?.activity?.let { activity ->
-             getKoin().get<ImagePicker> { parametersOf(activity) }
-         }
-     }*/
-    var showDialog by remember { mutableStateOf(false) }
+    var showImagePicker by remember { mutableStateOf(false) }
+    var selectedImageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
     val scope = rememberCoroutineScope()
+
+
+    val imagePicker = rememberImagePicker()
+    var showDialog by remember { mutableStateOf(false) }
     val dataStoreManager = remember { getKoin().get<DataStoreManager>() }
     Column(
         modifier = Modifier
@@ -112,13 +106,24 @@ fun ProfileScreen(rootNavController: NavController) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(modifier = Modifier.size(90.dp)) {
-                    Image(
-                        painter = painterResource(Res.drawable.img_user),
-                        contentDescription = "Profile Picture",
-                        modifier = Modifier
-                            .size(90.dp)
-                            .clip(CircleShape)
-                    )
+                    if (selectedImageBitmap != null) {
+                            Image(
+                                bitmap = selectedImageBitmap!!,
+                                contentDescription = "Selected Profile Picture",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(90.dp)
+                                    .clip(CircleShape)
+                            )
+                    } else {
+                        Image(
+                            painter = painterResource(Res.drawable.img_user),
+                            contentDescription = "Default Profile Picture",
+                            modifier = Modifier
+                                .size(90.dp)
+                                .clip(CircleShape)
+                        )
+                    }
 
                     Image(
                         painter = painterResource(Res.drawable.ic_camera),
@@ -127,7 +132,7 @@ fun ProfileScreen(rootNavController: NavController) {
                             .align(Alignment.BottomEnd)
                             .size(30.dp)
                             .background(Color.White, CircleShape).clickable {
-                                //imagePicker?.pickImageFromGallery()
+                                showImagePicker=true
                             }
                     )
                 }
@@ -243,6 +248,29 @@ fun ProfileScreen(rootNavController: NavController) {
                 Spacer(modifier = Modifier.height(15.dp))
             }
         }
+    }
+
+    if (showImagePicker) {
+        ImagePickerBottomSheet(
+            onCameraClick = {
+                scope.launch {
+                    val result = imagePicker.captureImageWithCamera()
+                    result?.let {
+                        selectedImageBitmap= decodeToImageBitmap(it.bytes)
+                    }
+                }
+            },
+            onGalleryClick = {
+                scope.launch {
+                    val result = imagePicker.pickImageFromGallery()
+                    result?.let {
+                        selectedImageBitmap= decodeToImageBitmap(it.bytes)
+                    }
+                }
+            },
+            onDismiss = { showImagePicker = false }
+        )
+
     }
 
     if (showDialog) {

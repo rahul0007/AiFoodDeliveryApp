@@ -1,4 +1,4 @@
-package org.aifooddelivery
+package org.aifooddelivery.app.core.database
 
 import android.content.Context
 import app.cash.sqldelight.db.SqlDriver
@@ -10,4 +10,3 @@ actual class DatabaseDriverFactory(private val context: Context) {
         return AndroidSqliteDriver(MyDataBase.Schema, context, "app.db")
     }
 }
-

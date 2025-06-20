@@ -1,74 +1,61 @@
 package org.aifooddelivery.app
 
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Build
-import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import org.aifooddelivery.app.utils.ImagePicker
 
-class AndroidImagePicker(private val activity: ComponentActivity) : ImagePicker {
+// androidMain/src/AndroidImagePicker.kt
 
-    private val galleryLauncher = activity.registerForActivityResult(
-        ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        // Handle selected image URI
-    }
+import android.Manifest
+import android.app.Activity
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.suspendCancellableCoroutine
+import org.aifooddelivery.app.utils.ImageResult
+import java.io.ByteArrayOutputStream
+import kotlin.coroutines.resume
 
-    private val cameraLauncher = activity.registerForActivityResult(
-        ActivityResultContracts.TakePicturePreview()
-    ) { bitmap: Bitmap? ->
-        // Handle captured bitmap
-    }
+class AndroidImagePicker(
+    private val launchGallery: () -> Unit,
+    private val launchCamera: () -> Unit,
+    private val requestPermission: (String) -> Unit,
+    private val checkPermission: (String) -> Boolean,
+) : ImagePicker {
 
-    private val permissionLauncher = activity.registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            // Retry the last requested action
-            when (lastRequested) {
-                "gallery" -> pickImageFromGalleryInternal()
-                "camera" -> captureImageWithCameraInternal()
+    override suspend fun pickImageFromGallery(): ImageResult? {
+        return suspendCancellableCoroutine { continuation ->
+            lastRequested = "gallery"
+            if (checkPermission(requiredGalleryPermission())) {
+                launchGallery()
+            } else {
+                requestPermission(requiredGalleryPermission())
             }
-        } else {
-            Toast.makeText(activity, "Permission denied", Toast.LENGTH_SHORT).show()
+
+            onImageSelectedListener = { continuation.resume(it) }
         }
     }
 
-    private var lastRequested: String? = null
+    override suspend fun captureImageWithCamera(): ImageResult? {
+        return suspendCancellableCoroutine { continuation ->
+            lastRequested = "camera"
+            if (checkPermission(Manifest.permission.CAMERA)) {
+                launchCamera()
+            } else {
+                requestPermission(Manifest.permission.CAMERA)
+            }
 
-    override fun pickImageFromGallery() {
-        lastRequested = "gallery"
-        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-            android.Manifest.permission.READ_MEDIA_IMAGES
+            onImageSelectedListener = { continuation.resume(it) }
+        }
+    }
+
+    private fun requiredGalleryPermission(): String {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            Manifest.permission.READ_MEDIA_IMAGES
         else
-            android.Manifest.permission.READ_EXTERNAL_STORAGE
-
-        if (ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED) {
-            pickImageFromGalleryInternal()
-        } else {
-            permissionLauncher.launch(permission)
-        }
+            Manifest.permission.READ_EXTERNAL_STORAGE
     }
 
-    override fun captureImageWithCamera() {
-        lastRequested = "camera"
-        val permission = android.Manifest.permission.CAMERA
-        if (ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED) {
-            captureImageWithCameraInternal()
-        } else {
-            permissionLauncher.launch(permission)
-        }
-    }
-
-    private fun pickImageFromGalleryInternal() {
-        galleryLauncher.launch("image/*")
-    }
-
-    private fun captureImageWithCameraInternal() {
-        cameraLauncher.launch(null)
+    companion object {
+        var onImageSelectedListener: ((ImageResult?) -> Unit)? = null
+        var lastRequested: String? = null
     }
 }
+
