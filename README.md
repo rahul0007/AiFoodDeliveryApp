@@ -30,7 +30,7 @@ AiFoodDeliveryApp is a Kotlin Multiplatform (KMP) based Food Delivery prototype 
 | DI | Koin |
 | Architecture | MVVM + Clean Architecture |
 | Async/State | Kotlin Coroutines / Flow |
-| Platforms | Android ✅, Desktop ✅ |
+| Platforms | Android ✅,Ios ✅, Desktop ✅ |
 
 
 
