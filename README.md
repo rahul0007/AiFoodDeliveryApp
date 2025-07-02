@@ -1,14 +1,146 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+readme_text = """
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+================================================
+🍔 AiFoodDeliveryApp - Kotlin Multiplatform (KMP)
+================================================
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform, 
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+🔰 Project Overview:
+--------------------
+AiFoodDeliveryApp is a Kotlin Multiplatform (KMP) based Food Delivery prototype application.
+
+✨ Features:
+✅ Local User Authentication (Login / Signup / Forgot Password / Change Password) - Using SQLDelight
+✅ MVVM + Clean Architecture
+✅ Compose Multiplatform UI (Android + Desktop)
+✅ Voyager & Jetpack Compose Navigation
+✅ Koin for Dependency Injection
+✅ Offline-First (Local DB)
+✅ Scalable NavGraph-based Navigation
+
+------------------------------------------
+🛠️ Tech Stack:
+------------------------------------------
+📝 Language: Kotlin
+🎨 UI: Jetpack Compose Multiplatform
+🧭 Navigation: Voyager Navigation & Compose Navigation
+💾 Local Database: SQLDelight
+🧬 DI: Koin
+🏗️ Architecture: MVVM + Clean Architecture
+🔄 Async/State: Kotlin Coroutines / Flow
+📱 Platforms: Android, Desktop JVM
+
+------------------------------------------
+🗃️ Database - SQLDelight (UserEntity Table):
+------------------------------------------
+Columns:
+- id (Primary Key AutoIncrement)
+- username (Text)
+- email (Unique Text)
+- password (Text)
+
+Key Queries:
+- insertUser
+- getUserByEmail
+- validateUser
+
+------------------------------------------
+📋 Application Features / Screens:
+------------------------------------------
+🔐 Authentication:
+- Login Screen
+- Register Screen
+- Forgot Password Screen
+- Change Password Screen
+
+🏠 Home:
+- Item Listing
+- Categories & Filters
+
+🛒 Product & Cart:
+- Product Detail Screen
+- Cart Screen
+- Payment Screen
+
+💬 Chat Module:
+- Chat List Screen
+- Chat Detail Screen
+
+👤 Profile:
+- Profile Info Screen
+- Personal Data
+- Settings
+- Add Card
+- Extra Card
+
+🔔 Notifications:
+- Grouped Notification Listing
+
+🔎 Search:
+- Search Screen
+
+📞 Support:
+- Call Support Screen
+- Delivery Tracking Screen
+- Help Center
+
+------------------------------------------
+🏛️ Architecture Structure:
+------------------------------------------
+commonMain/
+├── data/
+├── domain/
+├── presentation/
+├── di/
+└── navigation/
+
+androidMain/
+desktopMain/
+
+------------------------------------------
+🔐 Local Login Flow (SQLDelight + DataStore):
+------------------------------------------
+1. User enters credentials
+2. ViewModel validates via Repository
+3. Repository triggers SQLDelight queries
+4. If valid → Save user session in DataStore
+5. Navigate to Home Screen
+
+------------------------------------------
+🧪 Dependency Injection (Koin Example):
+------------------------------------------
+- UserDao
+- UserRepository
+- LoginViewModel
+- RegisterViewModel
+
+------------------------------------------
+🚀 How to Run the App:
+------------------------------------------
+▶️ Android → Run using Android Studio Emulator or Device  
+▶️ Desktop → Run using Desktop JVM target (DesktopLauncher / Main.kt)
+
+------------------------------------------
+🎯 Future Enhancements:
+------------------------------------------
+✅ Firebase Authentication (Optional)
+✅ Razorpay / Paytm Payment Gateway Integration
+✅ Real-Time Chat using WebSockets
+✅ Push Notifications
+✅ Paging3 (Pagination)
+✅ Unit & UI Tests
+
+------------------------------------------
+👤 Author:
+------------------------------------------
+Rahul Sondarva  
+GitHub: https://github.com/rahul0007  
+Project Repo: https://github.com/rahul0007/AiFoodDeliveryApp
+
+==========================================
+"""
+
+
+
 
 ![Screenshot__onBording_one](https://github.com/rahul0007/AiFoodDeliveryApp/blob/babfd570ab84ec08fd22ca42644616fafb7338b0/Screenshot__onBording_one.png).
 
