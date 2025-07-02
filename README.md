@@ -132,9 +132,6 @@ AiFoodDeliveryApp is a Kotlin Multiplatform (KMP) based Food Delivery prototype 
 ---
 
 ## 📸 Screenshots
----
-
-
 
 
 
