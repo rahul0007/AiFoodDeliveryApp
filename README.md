@@ -53,6 +53,28 @@ AiFoodDeliveryApp is a Kotlin Multiplatform (KMP) based Food Delivery prototype 
 
 ---
 
+## 🔐 Local Login Flow (SQLDelight + DataStore):
+
+1. User enters credentials
+2. ViewModel validates via Repository
+3. Repository triggers SQLDelight queries
+4. If valid → Save user session in DataStore
+5. Navigate to Home Screen
+
+---
+
+
+## 🧪 Dependency Injection (Koin Example):
+
+- UserDao
+- UserRepository
+- LoginViewModel
+- RegisterViewModel
+
+---
+
+
+
 ## 📋 Application Features / Screens:
 
 ### 🔐 Authentication:
@@ -102,6 +124,15 @@ AiFoodDeliveryApp is a Kotlin Multiplatform (KMP) based Food Delivery prototype 
 
 ---
 
+## 🚀 How to Run the App:
+
+- ▶️ **Android** → Run using Android Studio Emulator or Device
+- ▶️ **Desktop** → Run using Desktop JVM target (`DesktopLauncher` / `Main.kt`)
+
+---
+
+## 📸 Screenshots
+---
 
 
 
