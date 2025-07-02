@@ -1,8 +1,9 @@
- """
+# Creating a more attractive README text file (.txt) with section dividers and emojis for user download
 
-================================================
+readme_text = """
+==========================================
 🍔 AiFoodDeliveryApp - Kotlin Multiplatform (KMP)
-================================================
+==========================================
 
 🔰 Project Overview:
 --------------------
@@ -84,6 +85,15 @@ Key Queries:
 - Help Center
 
 ------------------------------------------
+🧭 Navigation Flow (NavGraph):
+------------------------------------------
+Login → Home → ProductDetail → Cart → Payment → DeliveryTracking
+            ↳ Profile → Change Password / Personal Data / Settings
+            ↳ Chat → ChatDetail
+            ↳ Notifications
+            ↳ Search
+
+------------------------------------------
 🏛️ Architecture Structure:
 ------------------------------------------
 commonMain/
@@ -138,6 +148,13 @@ Project Repo: https://github.com/rahul0007/AiFoodDeliveryApp
 
 ==========================================
 """
+
+file_path_txt = "/mnt/data/AiFoodDeliveryApp_README.txt"
+with open(file_path_txt, "w", encoding="utf-8") as f:
+    f.write(readme_text)
+
+file_path_txt
+
 
 
 
