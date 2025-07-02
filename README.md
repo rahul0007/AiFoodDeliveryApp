@@ -10,7 +10,7 @@ AiFoodDeliveryApp is a Kotlin Multiplatform (KMP) based Food Delivery prototype 
 ### ✨ Features:
 
 - ✅ **Local User Authentication (Login / Signup / Forgot Password / Change Password)** - Using SQLDelight
-- ✅ **MVVM + Clean Architecture**
+- ✅ **Clean Architecture**
 - ✅ **Compose Multiplatform UI (Android + Desktop)**
 - ✅ **Voyager & Jetpack Compose Navigation**
 - ✅ **Koin for Dependency Injection**
