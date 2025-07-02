@@ -1,4 +1,4 @@
-readme_text = """
+ """
 
 ================================================
 🍔 AiFoodDeliveryApp - Kotlin Multiplatform (KMP)
