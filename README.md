@@ -34,160 +34,74 @@ AiFoodDeliveryApp is a Kotlin Multiplatform (KMP) based Food Delivery prototype 
 
 
 
-readme_text = """
-==========================================
-🍔 AiFoodDeliveryApp - Kotlin Multiplatform (KMP)
-==========================================
+## 🗃️ Database - SQLDelight (UserEntity Table):
 
-🔰 Project Overview:
---------------------
-AiFoodDeliveryApp is a Kotlin Multiplatform (KMP) based Food Delivery prototype application.
+### Columns:
 
-✨ Features:
-✅ Local User Authentication (Login / Signup / Forgot Password / Change Password) - Using SQLDelight
-✅ MVVM + Clean Architecture
-✅ Compose Multiplatform UI (Android + Desktop)
-✅ Voyager & Jetpack Compose Navigation
-✅ Koin for Dependency Injection
-✅ Offline-First (Local DB)
-✅ Scalable NavGraph-based Navigation
+- **id** (Primary Key AutoIncrement)
+- **username** (Text)
+- **email** (Unique Text)
+- **password** (Text)
 
-------------------------------------------
-🛠️ Tech Stack:
-------------------------------------------
-📝 Language: Kotlin
-🎨 UI: Jetpack Compose Multiplatform
-🧭 Navigation: Voyager Navigation & Compose Navigation
-💾 Local Database: SQLDelight
-🧬 DI: Koin
-🏗️ Architecture: MVVM + Clean Architecture
-🔄 Async/State: Kotlin Coroutines / Flow
-📱 Platforms: Android, Desktop JVM
+---
 
-------------------------------------------
-🗃️ Database - SQLDelight (UserEntity Table):
-------------------------------------------
-Columns:
-- id (Primary Key AutoIncrement)
-- username (Text)
-- email (Unique Text)
-- password (Text)
+### 🔑 Key Queries:
 
-Key Queries:
-- insertUser
-- getUserByEmail
-- validateUser
+- `insertUser`
+- `getUserByEmail`
+- `validateUser`
 
-------------------------------------------
-📋 Application Features / Screens:
-------------------------------------------
-🔐 Authentication:
+---
+
+## 📋 Application Features / Screens:
+
+### 🔐 Authentication:
+
 - Login Screen
 - Register Screen
 - Forgot Password Screen
 - Change Password Screen
 
-🏠 Home:
+### 🏠 Home:
+
 - Item Listing
 - Categories & Filters
 
-🛒 Product & Cart:
+### 🛒 Product & Cart:
+
 - Product Detail Screen
 - Cart Screen
 - Payment Screen
 
-💬 Chat Module:
+### 💬 Chat Module:
+
 - Chat List Screen
 - Chat Detail Screen
 
-👤 Profile:
+### 👤 Profile:
+
 - Profile Info Screen
 - Personal Data
 - Settings
 - Add Card
 - Extra Card
 
-🔔 Notifications:
+### 🔔 Notifications:
+
 - Grouped Notification Listing
 
-🔎 Search:
+### 🔎 Search:
+
 - Search Screen
 
-📞 Support:
+### 📞 Support:
+
 - Call Support Screen
 - Delivery Tracking Screen
 - Help Center
 
-------------------------------------------
-🧭 Navigation Flow (NavGraph):
-------------------------------------------
-Login → Home → ProductDetail → Cart → Payment → DeliveryTracking
-            ↳ Profile → Change Password / Personal Data / Settings
-            ↳ Chat → ChatDetail
-            ↳ Notifications
-            ↳ Search
+---
 
-------------------------------------------
-🏛️ Architecture Structure:
-------------------------------------------
-commonMain/
-├── data/
-├── domain/
-├── presentation/
-├── di/
-└── navigation/
-
-androidMain/
-desktopMain/
-
-------------------------------------------
-🔐 Local Login Flow (SQLDelight + DataStore):
-------------------------------------------
-1. User enters credentials
-2. ViewModel validates via Repository
-3. Repository triggers SQLDelight queries
-4. If valid → Save user session in DataStore
-5. Navigate to Home Screen
-
-------------------------------------------
-🧪 Dependency Injection (Koin Example):
-------------------------------------------
-- UserDao
-- UserRepository
-- LoginViewModel
-- RegisterViewModel
-
-------------------------------------------
-🚀 How to Run the App:
-------------------------------------------
-▶️ Android → Run using Android Studio Emulator or Device  
-▶️ Desktop → Run using Desktop JVM target (DesktopLauncher / Main.kt)
-
-------------------------------------------
-🎯 Future Enhancements:
-------------------------------------------
-✅ Firebase Authentication (Optional)
-✅ Razorpay / Paytm Payment Gateway Integration
-✅ Real-Time Chat using WebSockets
-✅ Push Notifications
-✅ Paging3 (Pagination)
-✅ Unit & UI Tests
-
-------------------------------------------
-👤 Author:
-------------------------------------------
-Rahul Sondarva  
-GitHub: https://github.com/rahul0007  
-Project Repo: https://github.com/rahul0007/AiFoodDeliveryApp
-
-==========================================
-"""
-
-file_path_txt = "/mnt/data/AiFoodDeliveryApp_README.txt"
-with open(file_path_txt, "w", encoding="utf-8") as f:
-    f.write(readme_text)
-
-file_path_txt
 
 
 
