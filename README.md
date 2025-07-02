@@ -1,4 +1,3 @@
-# Creating a more attractive README text file (.txt) with section dividers and emojis for user download
 
 readme_text = """
 ==========================================
