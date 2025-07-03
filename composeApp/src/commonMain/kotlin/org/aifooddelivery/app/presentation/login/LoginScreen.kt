@@ -5,26 +5,28 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import kotlinx.coroutines.launch
-import org.aifooddelivery.app.presentation.componets.ReusableInputField
-import org.aifooddelivery.app.presentation.componets.ReusablePasswordField
 import org.aifooddelivery.app.presentation.login.viewModel.LoginViewModel
 import org.aifooddelivery.app.presentation.componets.AppNavigator
 import org.aifooddelivery.app.presentation.componets.HeaderLargeTextStyle
+import org.aifooddelivery.app.presentation.componets.ReusableInputField
+import org.aifooddelivery.app.presentation.componets.ReusablePasswordField
 import org.aifooddelivery.app.presentation.home.navigation.MainScreen
-import org.aifooddelivery.app.presentation.login.viewModel.LoginUiState
+import org.aifooddelivery.app.presentation.login.viewModel.LoginIntent
+import org.aifooddelivery.app.presentation.login.viewModel.LoginResult
 import org.aifooddelivery.app.showToast
 import org.aifooddelivery.app.utils.DataStoreManager
 import org.jetbrains.compose.resources.painterResource
@@ -32,73 +34,44 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.mp.KoinPlatform.getKoin
 
-class LoginScreen : Screen {
 
+class LoginScreen : Screen {
     @Composable
     override fun Content() {
-        val viewModel: LoginViewModel = koinInject()
-        val email by viewModel.email.collectAsState()
-        val password by viewModel.password.collectAsState()
-        val passwordVisible by viewModel.passwordVisible.collectAsState()
+        var viewModel: LoginViewModel = koinInject()
+        val state by viewModel.state.collectAsState()
         val scope = rememberCoroutineScope()
-        val dataStore = remember { getKoin().get<DataStoreManager>() }
-        val showErrors by viewModel.showErrors.collectAsState() // 👈 ADD THIS LINE
-        val isFormValid = viewModel.isFormValid()
-        val loginState by viewModel.loginState.collectAsState()
-        val isLoading by viewModel.isLoading.collectAsState()
-
-        val emailError by remember(email, showErrors) { derivedStateOf { viewModel.emailError() } }
-        val passwordError by remember(password, showErrors) { derivedStateOf { viewModel.passwordError() } }
-
-        val keyboardController = LocalSoftwareKeyboardController.current
-        LaunchedEffect(loginState) {
-            when (loginState) {
-                is LoginUiState.Success -> {
-                    dataStore.setLoginCompleted(true)
-                    dataStore.setUserEmail(viewModel.email.value)
-                    AppNavigator.navigate(MainScreen())
-                }
-
-                is LoginUiState.Error -> {
-                    println("LoginUiState")
-                    val message = (loginState as LoginUiState.Error).message
-                    showToast(message)
-                    viewModel.resetLoginState()
-                }
-
-                else -> {}
-            }
-        }
         LaunchedEffect(Unit) {
-            viewModel.message.collect { msg ->
+            viewModel.effect.collect { msg ->
                 showToast(msg)
             }
         }
+
         LoginScreenContent(
-            email = email,
-            password = password,
-            passwordVisible = passwordVisible,
-            emailError = emailError,
-            passwordError = passwordError,
-            onEmailChange = viewModel::onEmailChange,
-            onPasswordChange = viewModel::onPasswordChange,
-            onTogglePasswordVisibility = viewModel::togglePasswordVisibility,
+            email = state.email,
+            password = state.password,
+            passwordVisible = state.passwordVisible,
+            emailError = state.emailError,
+            passwordError = state.passwordError,
+            isLoading = state.isLoading,
+            onEmailChange = { viewModel.onIntent(LoginIntent.EmailChanged(it)) },
+            onPasswordChange = { viewModel.onIntent(LoginIntent.PasswordChanged(it)) },
+            onTogglePasswordVisibility = { viewModel.onIntent(LoginIntent.TogglePasswordVisibility) },
             onForgotPasswordClick = { AppNavigator.navigate(ForgetPasswordScreen()) },
-            onLoginClick = {
-                keyboardController?.hide()
-                viewModel.showValidationErrors()
-                if (isFormValid) {
-                    viewModel.loginWithValidation {
-                        scope.launch {
-                            dataStore.setLoginCompleted(true)
-                            dataStore.setUserEmail(viewModel.email.value)
-                            AppNavigator.navigate(MainScreen())
-                        }
-                    }
-                }
-            },
-            onRegisterClick = { AppNavigator.navigate(RegisterScreen()) }, isLoading
+            onLoginClick = { viewModel.onIntent(LoginIntent.LoginClicked) },
+            onRegisterClick = { AppNavigator.navigate(RegisterScreen()) }
         )
+
+        // Handle Login Success Navigation
+        if (state.loginResult is LoginResult.Success) {
+            scope.launch {
+                val dataStore = getKoin().get<DataStoreManager>()
+                dataStore.setLoginCompleted(true)
+                dataStore.setUserEmail(state.email)
+                AppNavigator.navigate(MainScreen())
+                viewModel.onIntent(LoginIntent.ResetState)
+            }
+        }
     }
 }
 
@@ -109,22 +82,23 @@ fun LoginScreenContent(
     passwordVisible: Boolean,
     emailError: String?,
     passwordError: String?,
+    isLoading: Boolean,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onTogglePasswordVisibility: () -> Unit,
     onForgotPasswordClick: () -> Unit,
     onLoginClick: () -> Unit,
-    onRegisterClick: () -> Unit,
-    isLoading: Boolean
+    onRegisterClick: () -> Unit
 ) {
     Box {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 30.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column {
+
+            ) {
+            Column(modifier = Modifier.fillMaxSize()) {
                 Spacer(Modifier.height(70.dp))
                 Text(
                     text = stringResource(Res.string.login_to_your_account),
@@ -234,13 +208,13 @@ fun LoginScreenContent(
                 }
             }
 
-            if (isLoading) {
+            /*if (isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(24.dp),
                     color = Color.White,
                     strokeWidth = 2.dp
                 )
-            }
+            }*/
         }
 
         // Loader overlay
@@ -260,3 +234,73 @@ fun LoginScreenContent(
         }
     }
 }
+
+//class LoginScreen : Screen {
+//
+//    @Composable
+//    override fun Content() {
+//        val viewModel: LoginViewModel = koinInject()
+//        val email by viewModel.email.collectAsState()
+//        val password by viewModel.password.collectAsState()
+//        val passwordVisible by viewModel.passwordVisible.collectAsState()
+//        val scope = rememberCoroutineScope()
+//        val dataStore = remember { getKoin().get<DataStoreManager>() }
+//        val showErrors by viewModel.showErrors.collectAsState() // 👈 ADD THIS LINE
+//        val isFormValid = viewModel.isFormValid()
+//        val loginState by viewModel.loginState.collectAsState()
+//        val isLoading by viewModel.isLoading.collectAsState()
+//        val emailError by remember(email, showErrors) { derivedStateOf { viewModel.emailError() } }
+//        val passwordError by remember(password, showErrors) { derivedStateOf { viewModel.passwordError() } }
+//
+//        val keyboardController = LocalSoftwareKeyboardController.current
+//        LaunchedEffect(loginState) {
+//            when (loginState) {
+//                is LoginUiState.Success -> {
+//                    dataStore.setLoginCompleted(true)
+//                    dataStore.setUserEmail(viewModel.email.value)
+//                    AppNavigator.navigate(MainScreen())
+//                }
+//
+//                is LoginUiState.Error -> {
+//                    println("LoginUiState")
+//                    val message = (loginState as LoginUiState.Error).message
+//                    showToast(message)
+//                    viewModel.resetLoginState()
+//                }
+//
+//                else -> {}
+//            }
+//        }
+//        LaunchedEffect(Unit) {
+//            viewModel.message.collect { msg ->
+//                showToast(msg)
+//            }
+//        }
+//        LoginScreenContent(
+//            email = email,
+//            password = password,
+//            passwordVisible = passwordVisible,
+//            emailError = emailError,
+//            passwordError = passwordError,
+//            onEmailChange = viewModel::onEmailChange,
+//            onPasswordChange = viewModel::onPasswordChange,
+//            onTogglePasswordVisibility = viewModel::togglePasswordVisibility,
+//            onForgotPasswordClick = { AppNavigator.navigate(ForgetPasswordScreen()) },
+//            onLoginClick = {
+//                keyboardController?.hide()
+//                viewModel.showValidationErrors()
+//                if (isFormValid) {
+//                    viewModel.loginWithValidation {
+//                        scope.launch {
+//                            dataStore.setLoginCompleted(true)
+//                            dataStore.setUserEmail(viewModel.email.value)
+//                            AppNavigator.navigate(MainScreen())
+//                        }
+//                    }
+//                }
+//            },
+//            onRegisterClick = { AppNavigator.navigate(RegisterScreen()) }, isLoading
+//        )
+//    }
+//}
+

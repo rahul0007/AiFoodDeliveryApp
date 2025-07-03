@@ -73,7 +73,6 @@ fun ProductDetailScreen(rootNavController: NavHostController){
             onIncrease = viewModel::increaseQuantity,
             onDecrease = viewModel::decreaseQuantity
         )
-
 }
 
 @Composable

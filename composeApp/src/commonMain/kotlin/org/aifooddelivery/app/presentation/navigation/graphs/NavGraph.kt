@@ -51,7 +51,7 @@ fun NavGraph(
             NotificationScreen(rootNavController)
         }
         composable("product_detail_screen") {
-           ProductDetailScreen(rootNavController)
+            ProductDetailScreen(rootNavController)
         }
 
         composable("settings_screen") {

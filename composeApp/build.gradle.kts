@@ -1,11 +1,14 @@
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.composeCompiler)
+
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.sqldelight)
+
 
 }
 
@@ -31,7 +34,7 @@ kotlin {
     iosX64Main.dependsOn(iosMain)
     iosArm64Main.dependsOn(iosMain)
     iosSimulatorArm64Main.dependsOn(iosMain)
-
+    jvm("desktop")
     sourceSets {
         getByName("androidMain").dependencies {
             implementation(libs.androidx.activity.compose)
@@ -45,6 +48,8 @@ kotlin {
             implementation(libs.androidx.data.store.core)
             implementation(libs.androidx.data.store.preferences)
             implementation(libs.sqldelight.android)
+            implementation(libs.koin.core)
+
         }
 
         getByName("commonMain").dependencies {
@@ -85,11 +90,27 @@ kotlin {
             implementation(libs.compose.runtime)
         }
 
+
+
         getByName("iosMain").dependencies {
             implementation(libs.sqldelight.native)
             implementation(libs.ktor.client.darwin)
 
         }
+
+        val desktopMain by getting {
+            dependencies {
+                implementation(compose.desktop.currentOs)
+                implementation(libs.kotlinx.coroutinesSwing)
+            }
+        }
+       /* getByName("desktopMain").dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutinesSwing)
+
+        }*/
+
+
     }
     sqldelight {
         databases {
@@ -124,6 +145,17 @@ android {
     }
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
+    }
+}
+compose.desktop {
+    application {
+        mainClass = "org.aifooddelivery.app.MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "org.aifooddelivery.app"
+            packageVersion = "1.0.0"
+        }
     }
 }
 

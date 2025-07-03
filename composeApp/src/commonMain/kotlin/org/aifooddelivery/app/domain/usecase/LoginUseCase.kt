@@ -8,6 +8,4 @@ class LoginUseCase(private val api: UserRepository) {
     suspend operator fun invoke(username: String, password: String): RequestState<LoginResponse> {
         return api.loginUser(username, password)
     }
-
-
 }

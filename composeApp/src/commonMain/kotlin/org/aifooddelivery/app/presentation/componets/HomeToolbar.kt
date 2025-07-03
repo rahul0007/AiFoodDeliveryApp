@@ -53,7 +53,6 @@ fun HomeToolbar(
             Image(
                 painter = painterResource(Res.drawable.back),
                 contentDescription = "Back",
-
                 modifier = Modifier
                     .size(35.dp)
                     .align(Alignment.CenterStart)

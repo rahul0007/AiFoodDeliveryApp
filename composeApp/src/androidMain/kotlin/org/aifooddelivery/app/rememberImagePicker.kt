@@ -20,40 +20,45 @@ actual fun rememberImagePicker(): ImagePicker {
     val context = LocalContext.current as ComponentActivity
     val contentResolver = context.contentResolver
 
-
-
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri: Uri? ->
             uri?.let { selectedUri ->
                 val bytes = contentResolver.openInputStream(selectedUri)?.readBytes()
                 val name = selectedUri.lastPathSegment ?: "gallery.jpg"
-                AndroidImagePicker.onImageSelectedListener?.invoke(ImageResult(name, bytes ?: ByteArray(0)))
+                AndroidImagePicker.onImageSelectedListener?.invoke(
+                    ImageResult(
+                        name,
+                        bytes ?: ByteArray(0)
+                    )
+                )
             } ?: AndroidImagePicker.onImageSelectedListener?.invoke(null)
         }
     )
 
-    val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap: Bitmap? ->
-        bitmap?.let {
-            val stream = ByteArrayOutputStream()
-            it.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-            AndroidImagePicker.onImageSelectedListener?.invoke(
-                ImageResult("camera.jpg", stream.toByteArray())
-            )
-        } ?: AndroidImagePicker.onImageSelectedListener?.invoke(null)
-    }
-
-    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-        if (isGranted) {
-            when (AndroidImagePicker.lastRequested) {
-                "gallery" -> galleryLauncher.launch("image/*")
-                "camera" -> cameraLauncher.launch(null)
-            }
-        } else {
-            Toast.makeText(context, "Permission denied", Toast.LENGTH_SHORT).show()
-            AndroidImagePicker.onImageSelectedListener?.invoke(null)
+    val cameraLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap: Bitmap? ->
+            bitmap?.let {
+                val stream = ByteArrayOutputStream()
+                it.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                AndroidImagePicker.onImageSelectedListener?.invoke(
+                    ImageResult("camera.jpg", stream.toByteArray())
+                )
+            } ?: AndroidImagePicker.onImageSelectedListener?.invoke(null)
         }
-    }
+
+    val permissionLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                when (AndroidImagePicker.lastRequested) {
+                    "gallery" -> galleryLauncher.launch("image/*")
+                    "camera" -> cameraLauncher.launch(null)
+                }
+            } else {
+                Toast.makeText(context, "Permission denied", Toast.LENGTH_SHORT).show()
+                AndroidImagePicker.onImageSelectedListener?.invoke(null)
+            }
+        }
 
     return remember {
         AndroidImagePicker(
@@ -61,7 +66,10 @@ actual fun rememberImagePicker(): ImagePicker {
             launchCamera = { cameraLauncher.launch(null) },
             requestPermission = { permissionLauncher.launch(it) },
             checkPermission = { perm ->
-                ContextCompat.checkSelfPermission(context, perm) == PackageManager.PERMISSION_GRANTED
+                ContextCompat.checkSelfPermission(
+                    context,
+                    perm
+                ) == PackageManager.PERMISSION_GRANTED
             }
         )
     }

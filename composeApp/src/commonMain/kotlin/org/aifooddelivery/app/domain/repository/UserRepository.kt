@@ -18,5 +18,4 @@ interface UserRepository {
     suspend fun loginWithValidation(email: String, password: String): UserEntity?
 
 
-
 }
