@@ -76,7 +76,7 @@ import org.aifooddelivery.app.showToast
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-class RegisterScreen: Screen {
+class RegisterScreen : Screen {
     @Composable
     override fun Content() {
         val viewModel: RegisterViewModel = koinInject()
