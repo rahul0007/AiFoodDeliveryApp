@@ -2,115 +2,19 @@ package org.aifooddelivery.app.presentation.login.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.aifooddelivery.app.domain.repository.UserRepository
 import org.aifooddelivery.app.domain.usecase.LoginUseCase
 
 
-class LoginViewModel(
-    private val loginUseCase: LoginUseCase,
-    private val userRepository: UserRepository
-) : ViewModel() {
-
-    private val _state = MutableStateFlow(LoginState())
-    val state: StateFlow<LoginState> = _state.asStateFlow()
-
-    private val _effect = MutableSharedFlow<String>()
-    val effect: SharedFlow<String> = _effect
-
-    fun onIntent(intent: LoginIntent) {
-        when (intent) {
-            is LoginIntent.EmailChanged -> {
-                _state.update { it.copy(email = intent.email, emailError = null) }
-            }
-
-            is LoginIntent.PasswordChanged -> {
-                _state.update { it.copy(password = intent.password, passwordError = null) }
-            }
-
-            LoginIntent.TogglePasswordVisibility -> {
-                _state.update { it.copy(passwordVisible = !it.passwordVisible) }
-            }
-
-            LoginIntent.ShowValidationErrors -> {
-                val emailError = validateEmail(_state.value.email)
-                val passwordError = validatePassword(_state.value.password)
-                _state.update {
-                    it.copy(
-                        emailError = emailError,
-                        passwordError = passwordError,
-                        isFormValid = emailError == null && passwordError == null
-                    )
-                }
-            }
-
-            LoginIntent.LoginClicked -> {
-                if (_state.value.isFormValid) {
-                    performLogin()
-                } else {
-                    onIntent(LoginIntent.ShowValidationErrors)
-                }
-            }
-
-            LoginIntent.ResetState -> {
-                _state.value = LoginState()
-            }
-        }
-    }
-
-    private fun validateEmail(email: String): String? {
-        val emailRegex = "^[A-Za-z](.*)([@]{1})(.+)(\\.)(.+)".toRegex()
-        return when {
-            email.isBlank() -> "Email is required"
-            !emailRegex.matches(email) -> "Invalid email"
-            else -> null
-        }
-    }
-
-    private fun validatePassword(password: String): String? {
-        return when {
-            password.isBlank() -> "Password is required"
-            password.length < 6 -> "Password too short"
-            else -> null
-        }
-    }
-
-    private fun performLogin() {
-        viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
-            val result =
-                userRepository.loginWithValidation(_state.value.email, _state.value.password)
-            if (result == null) {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        loginResult = LoginResult.Error("User not registered")
-                    )
-                }
-                _effect.emit("User not registered")
-            } else if (result.password != _state.value.password) {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        loginResult = LoginResult.Error("Invalid password")
-                    )
-                }
-                _effect.emit("Invalid password")
-            } else {
-                _state.update { it.copy(isLoading = false, loginResult = LoginResult.Success) }
-                _effect.emit("Login Success")
-            }
-        }
-    }
-}
-
-/*
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
     private val userRepository: UserRepository
@@ -155,7 +59,6 @@ class LoginViewModel(
     val passwordError: StateFlow<String?> = _passwordError.asStateFlow()
 
 
-
     fun showValidationErrors() {
         _showErrors.value = true
         _emailError.value = emailError()
@@ -165,11 +68,6 @@ class LoginViewModel(
     fun isFormValid(): Boolean {
         return validateEmail(_email.value) && validatePassword(_password.value)
     }
-
-    */
-/* fun isFormValid(): Boolean {
-         return validatePassword(_password.value)
-     }*//*
 
 
     fun emailError(): String? {
@@ -195,15 +93,15 @@ class LoginViewModel(
 
     fun getLogin() {
 
-        CoroutineScope(Dispatchers.Main).launch {
+        viewModelScope.launch {
             _isLoading.value = true
-            val fetchedData = loginUseCase.invoke(_email.value, _password.value)
+            val fetchedData = withContext(Dispatchers.IO) {
+                loginUseCase.invoke(_email.value, _password.value)
+            }
             if (fetchedData.isSuccess()) {
                 _loginState.value = LoginUiState.Success
             } else {
-
-                _loginState.value =
-                    LoginUiState.Error(fetchedData.getErrorMessage() ?: "Unknown error")
+                _loginState.value = LoginUiState.Error(fetchedData.getErrorMessage() ?: "Unknown error")
             }
             _isLoading.value = false
         }
@@ -235,4 +133,4 @@ class LoginViewModel(
         _message.emit(msg)
     }
 }
-*/
+
