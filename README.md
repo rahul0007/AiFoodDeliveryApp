@@ -1,14 +1,139 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+# 🍔 AiFoodDeliveryApp - Kotlin Multiplatform (KMP)
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform, 
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+---
+
+## 📱 Project Overview:
+
+AiFoodDeliveryApp is a Kotlin Multiplatform (KMP) based Food Delivery prototype application.
+
+### ✨ Features:
+
+- ✅ **Local User Authentication (Login / Signup / Forgot Password / Change Password)** - Using SQLDelight
+- ✅ **Clean Architecture**
+- ✅ **Compose Multiplatform UI (Android + Desktop)**
+- ✅ **Voyager & Jetpack Compose Navigation**
+- ✅ **Koin for Dependency Injection**
+- ✅ **Offline-First (Local DB)**
+- ✅ **Scalable NavGraph-based Navigation**
+
+---
+
+## 🛠️ Tech Stack:
+
+| Layer | Technology |
+|------|-----------|
+| Language | Kotlin |
+| UI | Jetpack Compose Multiplatform |
+| Navigation | Voyager Navigation / Jetpack Compose Navigation |
+| Local DB | SQLDelight |
+| DI | Koin |
+| Architecture | MVVM + Clean Architecture |
+| Async/State | Kotlin Coroutines / Flow |
+| Platforms | Android ✅,Ios ✅, Desktop ✅ |
+
+
+
+## 🗃️ Database - SQLDelight (UserEntity Table):
+
+### Columns:
+
+- **id** (Primary Key AutoIncrement)
+- **username** (Text)
+- **email** (Unique Text)
+- **password** (Text)
+
+---
+
+### 🔑 Key Queries:
+
+- `insertUser`
+- `getUserByEmail`
+- `validateUser`
+
+---
+
+## 🔐 Local Login Flow (SQLDelight + DataStore):
+
+1. User enters credentials
+2. ViewModel validates via Repository
+3. Repository triggers SQLDelight queries
+4. If valid → Save user session in DataStore
+5. Navigate to Home Screen
+
+---
+
+
+## 🧪 Dependency Injection (Koin Example):
+
+- UserDao
+- UserRepository
+- LoginViewModel
+- RegisterViewModel
+
+---
+
+
+
+## 📋 Application Features / Screens:
+
+### 🔐 Authentication:
+
+- Login Screen
+- Register Screen
+- Forgot Password Screen
+- Change Password Screen
+
+### 🏠 Home:
+
+- Item Listing
+- Categories & Filters
+
+### 🛒 Product & Cart:
+
+- Product Detail Screen
+- Cart Screen
+- Payment Screen
+
+### 💬 Chat Module:
+
+- Chat List Screen
+- Chat Detail Screen
+
+### 👤 Profile:
+
+- Profile Info Screen
+- Personal Data
+- Settings
+- Add Card
+- Extra Card
+
+### 🔔 Notifications:
+
+- Grouped Notification Listing
+
+### 🔎 Search:
+
+- Search Screen
+
+### 📞 Support:
+
+- Call Support Screen
+- Delivery Tracking Screen
+- Help Center
+
+---
+
+## 🚀 How to Run the App:
+
+- ▶️ **Android** → Run using Android Studio Emulator or Device
+- ▶️ **Desktop** → Run using Desktop JVM target (`DesktopLauncher` / `Main.kt`)
+
+---
+
+## 📸 Screenshots
+
+
 
 ![Screenshot__onBording_one](https://github.com/rahul0007/AiFoodDeliveryApp/blob/babfd570ab84ec08fd22ca42644616fafb7338b0/Screenshot__onBording_one.png).
 
