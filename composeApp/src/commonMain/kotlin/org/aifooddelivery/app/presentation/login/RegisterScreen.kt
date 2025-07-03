@@ -75,10 +75,10 @@ import org.aifooddelivery.app.presentation.login.viewModel.RegisterUiState
 import org.aifooddelivery.app.showToast
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-@Composable
-fun RegisterScreen()  {
 
-
+class RegisterScreen: Screen {
+    @Composable
+    override fun Content() {
         val viewModel: RegisterViewModel = koinInject()
         val viewModelScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
         val email by viewModel.email.collectAsState()
