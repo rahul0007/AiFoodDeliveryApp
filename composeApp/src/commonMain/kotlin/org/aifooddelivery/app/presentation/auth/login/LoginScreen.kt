@@ -1,4 +1,4 @@
-package org.aifooddelivery.app.presentation.login
+package org.aifooddelivery.app.presentation.auth.login
 
 import aifooddeliveryapp.composeapp.generated.resources.*
 import androidx.compose.foundation.Image
@@ -19,14 +19,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import kotlinx.coroutines.launch
-import org.aifooddelivery.app.presentation.login.viewModel.LoginViewModel
+import org.aifooddelivery.app.presentation.auth.ForgetPasswordScreen
+import org.aifooddelivery.app.presentation.auth.register.RegisterScreen
 import org.aifooddelivery.app.presentation.componets.AppNavigator
 import org.aifooddelivery.app.presentation.componets.HeaderLargeTextStyle
 import org.aifooddelivery.app.presentation.componets.ReusableInputField
 import org.aifooddelivery.app.presentation.componets.ReusablePasswordField
 import org.aifooddelivery.app.presentation.home.navigation.MainScreen
-import org.aifooddelivery.app.presentation.login.viewModel.LoginIntent
-import org.aifooddelivery.app.presentation.login.viewModel.LoginResult
 import org.aifooddelivery.app.showToast
 import org.aifooddelivery.app.utils.DataStoreManager
 import org.jetbrains.compose.resources.painterResource
@@ -42,8 +41,14 @@ class LoginScreen : Screen {
         val state by viewModel.state.collectAsState()
         val scope = rememberCoroutineScope()
         LaunchedEffect(Unit) {
-            viewModel.effect.collect { msg ->
-                showToast(msg)
+            viewModel.effect.collect { effect ->
+                when (effect) {
+                    is LoginUiEffect.ShowToast -> showToast(effect.message)
+                    LoginUiEffect.Navigate -> {
+
+
+                    }
+                }
             }
         }
 

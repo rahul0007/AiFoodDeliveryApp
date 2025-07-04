@@ -63,7 +63,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import kotlinx.coroutines.launch
 import org.aifooddelivery.app.decodeToImageBitmap
-import org.aifooddelivery.app.presentation.login.LoginScreen
+import org.aifooddelivery.app.presentation.auth.login.LoginScreen
 import org.aifooddelivery.app.presentation.componets.AppNavigator
 import org.aifooddelivery.app.presentation.componets.AppNavigator.resetTo
 import org.aifooddelivery.app.rememberImagePicker

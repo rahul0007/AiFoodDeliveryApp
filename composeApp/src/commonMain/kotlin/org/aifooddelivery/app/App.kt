@@ -3,13 +3,11 @@ package org.aifooddelivery.app
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.aifooddelivery.app.core.di.appModule
-import org.aifooddelivery.app.presentation.login.LoginScreen
+import org.aifooddelivery.app.presentation.auth.login.LoginScreen
 import org.aifooddelivery.app.presentation.componets.AppNavigator
 import org.aifooddelivery.app.presentation.Onboard.OnboardingScreen1
 import org.aifooddelivery.app.presentation.home.navigation.MainScreen
 import org.aifooddelivery.app.utils.DataStoreManager
-import org.koin.core.context.startKoin
 import org.koin.mp.KoinPlatform.getKoin
 
 @Composable

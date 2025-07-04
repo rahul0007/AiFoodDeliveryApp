@@ -1,9 +1,8 @@
-package org.aifooddelivery.app.presentation.login
+package org.aifooddelivery.app.presentation.auth
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen
-import org.aifooddelivery.app.presentation.login.viewModel.ResetPasswordViewModel
 import org.koin.compose.koinInject
 import aifooddeliveryapp.composeapp.generated.resources.Res
 import aifooddeliveryapp.composeapp.generated.resources.confirm_password

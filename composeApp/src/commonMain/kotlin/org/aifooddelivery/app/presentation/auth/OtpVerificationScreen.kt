@@ -1,4 +1,4 @@
-package org.aifooddelivery.app.presentation.login
+package org.aifooddelivery.app.presentation.auth
 
 import cafe.adriel.voyager.core.screen.Screen
 
@@ -30,7 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import org.aifooddelivery.app.presentation.login.viewModel.OtpVerificationViewModel
 import org.aifooddelivery.app.showToast
 import org.aifooddelivery.app.theme.grayColor
 import org.aifooddelivery.app.theme.primaryLight

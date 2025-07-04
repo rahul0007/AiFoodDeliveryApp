@@ -5,7 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import cafe.adriel.voyager.core.screen.Screen
 import kotlinx.coroutines.launch
-import org.aifooddelivery.app.presentation.login.LoginScreen
+import org.aifooddelivery.app.presentation.auth.login.LoginScreen
 import org.aifooddelivery.app.presentation.componets.AppNavigator
 import org.aifooddelivery.app.presentation.componets.OnboardingContent
 import org.aifooddelivery.app.utils.DataStoreManager

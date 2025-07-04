@@ -1,4 +1,4 @@
-package org.aifooddelivery.app.presentation.login.viewModel
+package org.aifooddelivery.app.presentation.auth
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

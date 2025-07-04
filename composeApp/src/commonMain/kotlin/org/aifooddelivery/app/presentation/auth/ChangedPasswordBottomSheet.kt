@@ -1,4 +1,4 @@
-package org.aifooddelivery.app.presentation.login
+package org.aifooddelivery.app.presentation.auth
 import aifooddeliveryapp.composeapp.generated.resources.Res
 import aifooddeliveryapp.composeapp.generated.resources.ilustration_success
 import aifooddeliveryapp.composeapp.generated.resources.password_changed
@@ -23,7 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.layout.ContentScale
-import kotlinx.coroutines.Job
 import org.aifooddelivery.app.theme.grayColor
 import org.aifooddelivery.app.theme.primaryLight
 import org.aifooddelivery.app.presentation.componets.HeaderMediumStyle

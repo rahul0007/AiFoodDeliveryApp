@@ -1,4 +1,4 @@
-package org.aifooddelivery.app.presentation.login.viewModel
+package org.aifooddelivery.app.presentation.auth.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,15 +18,16 @@ class LoginViewModel(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
+
     private val _state = MutableStateFlow(LoginState())
     val state: StateFlow<LoginState> = _state.asStateFlow()
-
-    private val _effect = MutableSharedFlow<String>()
-    val effect: SharedFlow<String> = _effect
+    private val _effect = MutableSharedFlow<LoginUiEffect>()
+    val effect: SharedFlow<LoginUiEffect> = _effect
 
     fun onIntent(intent: LoginIntent) {
         when (intent) {
             is LoginIntent.EmailChanged -> {
+                loginUseCase.invoke("","")
                 _state.update { it.copy(email = intent.email, emailError = null) }
             }
 
@@ -93,7 +94,7 @@ class LoginViewModel(
                         loginResult = LoginResult.Error("User not registered")
                     )
                 }
-                _effect.emit("User not registered")
+                launchEffect(LoginUiEffect.ShowToast("User not registered"))
             } else if (result.password != _state.value.password) {
                 _state.update {
                     it.copy(
@@ -101,12 +102,18 @@ class LoginViewModel(
                         loginResult = LoginResult.Error("Invalid password")
                     )
                 }
-                _effect.emit("Invalid password")
+                launchEffect(LoginUiEffect.ShowToast("Invalid password"))
+
             } else {
                 _state.update { it.copy(isLoading = false, loginResult = LoginResult.Success) }
-                _effect.emit("Login Success")
+                launchEffect(LoginUiEffect.ShowToast("Login Success"))
+
             }
         }
+    }
+
+    private fun launchEffect(effect: LoginUiEffect) {
+        viewModelScope.launch { _effect.emit(effect) }
     }
 }
 

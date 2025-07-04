@@ -1,4 +1,4 @@
-package org.aifooddelivery.app.presentation.login
+package org.aifooddelivery.app.presentation.auth
 
 import aifooddeliveryapp.composeapp.generated.resources.Res
 import aifooddeliveryapp.composeapp.generated.resources.btn_continue

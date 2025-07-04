@@ -1,4 +1,4 @@
-package org.aifooddelivery.app.presentation.login.viewModel
+package org.aifooddelivery.app.presentation.auth
 
 import aifooddeliveryapp.composeapp.generated.resources.Res
 import aifooddeliveryapp.composeapp.generated.resources.both_password

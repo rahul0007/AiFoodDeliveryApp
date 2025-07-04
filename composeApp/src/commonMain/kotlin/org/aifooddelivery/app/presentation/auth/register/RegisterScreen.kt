@@ -1,8 +1,7 @@
-package org.aifooddelivery.app.presentation.login
+package org.aifooddelivery.app.presentation.auth.register
 
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen
-import org.aifooddelivery.app.presentation.login.viewModel.RegisterViewModel
 import aifooddeliveryapp.composeapp.generated.resources.Res
 import aifooddeliveryapp.composeapp.generated.resources.btn_sign_in
 import aifooddeliveryapp.composeapp.generated.resources.create_an_account_to_start_looking
@@ -57,21 +56,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
 import cafe.adriel.voyager.navigator.internal.BackHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import org.aifooddelivery.app.presentation.componets.AppNavigator
 import org.aifooddelivery.app.presentation.componets.TermsAgreement
-import org.aifooddelivery.app.presentation.login.viewModel.RegisterUiState
 import org.aifooddelivery.app.showToast
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -80,20 +72,14 @@ class RegisterScreen : Screen {
     @Composable
     override fun Content() {
         val viewModel: RegisterViewModel = koinInject()
-        val viewModelScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-        val email by viewModel.email.collectAsState()
-        val userName by viewModel.userName.collectAsState()
-        val password by viewModel.password.collectAsState()
-        val passwordVisible by viewModel.passwordVisible.collectAsState()
-        val acceptedTerms by viewModel.acceptedTerms.collectAsState()
-        val showErrors by viewModel.showErrors.collectAsState()
-        val isFormValid = viewModel.isFormValid()
-        val emailError = viewModel.emailError()?.let { stringResource(it) }
-        val userNameError = viewModel.userNameError()?.let { stringResource(it) }
-        val passwordError = viewModel.passwordError()?.let { stringResource(it) }
+        val state by viewModel.state.collectAsState()
+
         LaunchedEffect(Unit) {
-            viewModel.message.collect { msg ->
-                showToast(msg)
+            viewModel.effect.collect { effect ->
+                when (effect) {
+                    is RegisterUiEffect.ShowToast -> showToast(effect.message)
+                    is RegisterUiEffect.NavigateLogin -> AppNavigator.goBack()
+                }
             }
         }
 
@@ -101,35 +87,29 @@ class RegisterScreen : Screen {
             onBackPressed = {
                 AppNavigator.goBack()
             },
-            email = email,
-            userName = userName,
-            password = password,
-            passwordVisible = passwordVisible,
-            acceptedTerms = acceptedTerms,
-            emailError = emailError,
-            userNameError = userNameError,
-            passwordError = passwordError,
-            onEmailChange = viewModel::onEmailChange,
-            onUserNameChange = viewModel::onUserNameChange,
-            onPasswordChange = viewModel::onPasswordChange,
-            onTogglePasswordVisibility = viewModel::togglePasswordVisibility,
-            onAcceptedTermsChange = viewModel::setAcceptedTerms,
+            email = state.email,
+            userName = state.userName,
+            password = state.password,
+            passwordVisible = state.passwordVisible,
+            acceptedTerms = state.acceptedTerms,
+            emailError = state.emailError,
+            userNameError = state.userNameError,
+            passwordError = state.passwordError,
+            onEmailChange = { viewModel.onIntent(RegisterIntent.EmailChanged(it)) },
+            onUserNameChange = { viewModel.onIntent(RegisterIntent.UserNameChanged(it)) },
+            onPasswordChange = { viewModel.onIntent(RegisterIntent.PasswordChanged(it)) },
+            onTogglePasswordVisibility = { viewModel.onIntent(RegisterIntent.togglePasswordVisibility) },
+            onAcceptedTermsChange = { viewModel.onIntent(RegisterIntent.acceptedTerms) },
             onRegisterClick = {
-                viewModel.showValidationErrors()
+                viewModel.onIntent(RegisterIntent.ShowValidationErrors)
+                val isFormValid = viewModel.state.value.isFromValid
                 if (isFormValid) {
                     viewModel.registerUser()
-
                 }
             }
         )
     }
 
-}
-
-fun RegisterUiState.messageOrNull(): String? = when (this) {
-    is RegisterUiState.Success -> this.message
-    is RegisterUiState.Error -> this.message
-    else -> null
 }
 
 @OptIn(InternalVoyagerApi::class)
