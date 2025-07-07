@@ -1,4 +1,4 @@
-package org.aifooddelivery.app.presentation.Onboard
+package org.aifooddelivery.app.presentation.onboard
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -11,21 +11,24 @@ import org.aifooddelivery.app.presentation.componets.OnboardingContent
 import org.aifooddelivery.app.utils.DataStoreManager
 import org.koin.mp.KoinPlatform.getKoin
 
-
-class OnboardingScreen3 : Screen {
+class OnboardingScreen1 : Screen {
     @Composable
     override fun Content() {
+
         val scope = rememberCoroutineScope()
         val dataStoreManager = remember { getKoin().get<DataStoreManager>() }
+        OnboardingContent(
+            0, onSkip = {
+                scope.launch {
+                    dataStoreManager.setOnboardingCompleted(true)
+                    AppNavigator.navigate(LoginScreen())
+                }
+            },
+            onNext = {
+                println("OnboardingScreen2")
+                AppNavigator.navigate(OnboardingScreen2())
 
-        OnboardingContent(2, {}, {
-            println("OnboardingScreen4")
-        }, {
-            scope.launch {
-                dataStoreManager.setOnboardingCompleted(true)
-                AppNavigator.navigate(LoginScreen())
-            }
-        })
+            },{}
+        )
     }
 }
-

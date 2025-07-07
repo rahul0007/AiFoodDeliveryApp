@@ -34,6 +34,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -175,7 +176,7 @@ fun ProfileScreen(rootNavController: NavController) {
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
-                    Divider(color = contanerColor, thickness = 2.dp)
+                    HorizontalDivider(color = contanerColor, thickness = 2.dp)
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Image(
@@ -197,7 +198,7 @@ fun ProfileScreen(rootNavController: NavController) {
             }
 
             Spacer(modifier = Modifier.height(20.dp))
-            Divider(color = contanerColor, thickness = 2.dp)
+            HorizontalDivider(color = contanerColor, thickness = 2.dp)
 
             // Profile Options Section
             Column {

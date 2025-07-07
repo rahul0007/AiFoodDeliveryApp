@@ -2,6 +2,7 @@ package org.aifooddelivery.app.presentation.auth
 
 import aifooddeliveryapp.composeapp.generated.resources.Res
 import aifooddeliveryapp.composeapp.generated.resources.email_is_required
+import aifooddeliveryapp.composeapp.generated.resources.invalid_email
 import aifooddeliveryapp.composeapp.generated.resources.onboarding_one_subtitle
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
@@ -34,7 +35,7 @@ class ForgetPasswordViewModel : ViewModel() {
         return when {
             !_showErrors.value -> null
             value.isBlank() -> stringResource(Res.string.email_is_required)
-            !emailRegex.matches(value) -> stringResource(Res.string.onboarding_one_subtitle)
+            !emailRegex.matches(value) -> stringResource(Res.string.invalid_email)
             else -> null
         }
     }

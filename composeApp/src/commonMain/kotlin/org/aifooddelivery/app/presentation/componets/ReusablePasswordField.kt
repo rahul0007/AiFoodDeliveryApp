@@ -45,7 +45,7 @@ fun ReusablePasswordField(
         modifier = Modifier.fillMaxWidth(),
         singleLine = true,
         shape = RoundedCornerShape(12.dp),
-        placeholder = { Text(stringResource(Res.string.password)) },
+        placeholder = { Text(org.aifooddelivery.app.utils.StringsManager.get("password")) },
         visualTransformation = if (isVisible) VisualTransformation.None else PasswordVisualTransformation(),
         trailingIcon = {
             val iconRes = if (isVisible) Res.drawable.visibility_off else Res.drawable.visibility

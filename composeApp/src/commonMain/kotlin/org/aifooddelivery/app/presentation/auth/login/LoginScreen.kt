@@ -28,6 +28,7 @@ import org.aifooddelivery.app.presentation.componets.ReusablePasswordField
 import org.aifooddelivery.app.presentation.home.navigation.MainScreen
 import org.aifooddelivery.app.showToast
 import org.aifooddelivery.app.utils.DataStoreManager
+import org.aifooddelivery.app.utils.StringsManager
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -45,7 +46,6 @@ class LoginScreen : Screen {
                 when (effect) {
                     is LoginUiEffect.ShowToast -> showToast(effect.message)
                     LoginUiEffect.Navigate -> {
-
 
                     }
                 }
@@ -106,7 +106,7 @@ fun LoginScreenContent(
             Column(modifier = Modifier.fillMaxSize()) {
                 Spacer(Modifier.height(70.dp))
                 Text(
-                    text = stringResource(Res.string.login_to_your_account),
+                    text = StringsManager.get("login_to_your_account"),
                     lineHeight = 60.sp,
                     style = HeaderLargeTextStyle,
                 )
@@ -119,10 +119,10 @@ fun LoginScreenContent(
                 Spacer(Modifier.height(40.dp))
 
                 ReusableInputField(
-                    label = stringResource(Res.string.email_address),
+                    label = StringsManager.get("email_address"),
                     value = email,
                     onValueChange = onEmailChange,
-                    placeholder = stringResource(Res.string.enter_email),
+                    placeholder = StringsManager.get("enter_email"),
                     isError = emailError != null,
                     errorText = emailError,
                     keyboardType = KeyboardType.Email
@@ -131,7 +131,7 @@ fun LoginScreenContent(
                 Spacer(Modifier.height(20.dp))
 
                 ReusablePasswordField(
-                    label = stringResource(Res.string.password),
+                    label = StringsManager.get("password"),
                     value = password,
                     onValueChange = onPasswordChange,
                     isVisible = passwordVisible,
@@ -142,7 +142,7 @@ fun LoginScreenContent(
 
                 Spacer(Modifier.height(28.dp))
                 Text(
-                    text = stringResource(Res.string.forgot_password),
+                    text = StringsManager.get("forgot_password"),
                     modifier = Modifier
                         .align(Alignment.End)
                         .clickable { onForgotPasswordClick() },
@@ -159,7 +159,7 @@ fun LoginScreenContent(
                     shape = RoundedCornerShape(40.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800))
                 ) {
-                    Text(stringResource(Res.string.btn_sign_in), color = Color.White)
+                    Text(StringsManager.get("btn_sign_in"), color = Color.White)
                 }
 
                 Spacer(Modifier.height(30.dp))
@@ -169,7 +169,7 @@ fun LoginScreenContent(
                 ) {
                     Divider(modifier = Modifier.weight(1f))
                     Text(
-                        text = stringResource(Res.string.or_sign_in_with),
+                        text = StringsManager.get("or_sign_in_with"),
                         color = Color.Gray,
                         style = MaterialTheme.typography.bodyMedium
                     )
@@ -202,10 +202,10 @@ fun LoginScreenContent(
                 verticalArrangement = Arrangement.Top
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(stringResource(Res.string.dont_have_an_account))
+                    Text(StringsManager.get("dont_have_an_account"))
                     Spacer(Modifier.width(4.dp))
                     Text(
-                        text = stringResource(Res.string.btn_register),
+                        text = StringsManager.get("btn_register"),
                         color = Color(0xFFFF9800),
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.clickable { onRegisterClick() }

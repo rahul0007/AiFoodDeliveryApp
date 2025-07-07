@@ -17,7 +17,7 @@ import org.aifooddelivery.app.theme.contanerColor
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun HomeScreen(rootNavController: NavController, ) {
+fun HomeScreen(rootNavController: NavController ) {
     var viewModel: HomeViewModel = koinViewModel()
     val selectedCategory =viewModel.selectedCategory.collectAsState()
 

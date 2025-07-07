@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.aifooddelivery.app.domain.repository.UserRepository
 import org.aifooddelivery.app.domain.usecase.LoginUseCase
+import org.aifooddelivery.app.utils.StringsManager
 
 
 class LoginViewModel(
@@ -27,7 +28,6 @@ class LoginViewModel(
     fun onIntent(intent: LoginIntent) {
         when (intent) {
             is LoginIntent.EmailChanged -> {
-                loginUseCase.invoke("","")
                 _state.update { it.copy(email = intent.email, emailError = null) }
             }
 
@@ -42,21 +42,24 @@ class LoginViewModel(
             LoginIntent.ShowValidationErrors -> {
                 val emailError = validateEmail(_state.value.email)
                 val passwordError = validatePassword(_state.value.password)
+                val formIsValid = emailError == null && passwordError == null
+
                 _state.update {
                     it.copy(
                         emailError = emailError,
                         passwordError = passwordError,
-                        isFormValid = emailError == null && passwordError == null
+                        isFormValid = formIsValid
                     )
+                }
+
+                if (formIsValid) {
+                    performLogin()
                 }
             }
 
             LoginIntent.LoginClicked -> {
-                if (_state.value.isFormValid) {
-                    performLogin()
-                } else {
-                    onIntent(LoginIntent.ShowValidationErrors)
-                }
+                if (_state.value.isLoading) return
+                onIntent(LoginIntent.ShowValidationErrors)
             }
 
             LoginIntent.ResetState -> {
@@ -68,16 +71,16 @@ class LoginViewModel(
     private fun validateEmail(email: String): String? {
         val emailRegex = "^[A-Za-z](.*)([@]{1})(.+)(\\.)(.+)".toRegex()
         return when {
-            email.isBlank() -> "Email is required"
-            !emailRegex.matches(email) -> "Invalid email"
+            email.isBlank() -> StringsManager.get("email_is_required")
+            !emailRegex.matches(email) -> StringsManager.get("invalid_email")
             else -> null
         }
     }
 
     private fun validatePassword(password: String): String? {
         return when {
-            password.isBlank() -> "Password is required"
-            password.length < 6 -> "Password too short"
+            password.isBlank() -> StringsManager.get("password_is_required")
+            password.length < 6 -> StringsManager.get("password_to_short")
             else -> null
         }
     }
